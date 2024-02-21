@@ -1,0 +1,107 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content class="dialog">
+  <form [formGroup]="formGroup">
+    <mat-form-field class="name">
+      <mat-label class="name-label">Имя</mat-label>
+      <input
+        class="name-input"
+        type="text"
+        matInput
+        placeholder="Имя"
+        formControlName="name"
+        required
+      />
+    </mat-form-field>
+    <mat-error
+      *ngIf="
+        formGroup.controls['name'].hasError('required') &&
+        formGroup.controls['name'].touched
+      "
+    >
+      Минимальное количество символов: 2
+    </mat-error>
+
+    <mat-form-field class="surname">
+      <mat-label class="surname-label">Фамилия</mat-label>
+      <input
+        class="surname-input"
+        type="text"
+        matInput
+        placeholder="Фамилия"
+        formControlName="surname"
+        required
+      />
+    </mat-form-field>
+    <mat-error
+      *ngIf="
+        formGroup.controls['surname'].hasError('required') &&
+        formGroup.controls['surname'].touched
+      "
+    >
+      Минимальное количество символов: 2
+    </mat-error>
+
+    <mat-form-field class="email">
+      <mat-label>E-mail</mat-label>
+      <input
+        type="email"
+        matInput
+        placeholder="E-mail"
+        formControlName="email"
+      />
+    </mat-form-field>
+    <mat-error
+      *ngIf="
+        formGroup.controls['email'].hasError('email') &&
+        !formGroup.controls['email'].hasError('required') &&
+        formGroup.controls['email'].touched
+      "
+    >
+      Некорректный адрес
+    </mat-error>
+
+    <mat-error
+      *ngIf="
+        formGroup.controls['email'].hasError('required') &&
+        formGroup.controls['email'].touched
+      "
+    >
+      Некорректный адрес
+    </mat-error>
+
+    <mat-form-field class="phone">
+      <mat-label>Телефон</mat-label>
+      <input
+        type="tel"
+        matInput
+        placeholder="Телефон"
+        formControlName="phone"
+      />
+    </mat-form-field>
+    <mat-error
+      *ngIf="
+        !formGroup.controls['phone'].hasError('required') &&
+        formGroup.controls['phone'].hasError('pattern') &&
+        formGroup.controls['phone'].touched
+      "
+    >
+      Некорректный номер телефона
+    </mat-error>
+
+    <mat-error
+      *ngIf="
+        formGroup.controls['phone'].hasError('required') &&
+        formGroup.controls['phone'].touched
+      "
+    >
+      Некорректный номер телефона
+    </mat-error>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onSaveClick()" [disabled]="formGroup.invalid">
+    Сохранить
+  </button>
+  <button mat-button (click)="onCancelClick()">Отмена</button>
+</div>

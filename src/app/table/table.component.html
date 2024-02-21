@@ -1,4 +1,9 @@
 <div>
+  <button mat-icon-button (click)="addClient()">
+    <mat-icon fontIcon="add"></mat-icon>
+  </button>
+  <button mat-icon-button><mat-icon fontIcon="delete"></mat-icon></button>
+
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>

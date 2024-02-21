@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { FormGroup } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
+import { DialogComponent } from '../dialog/dialog.component';
+import { DialogData } from '../dialog/dialog-data';
+import { TableDataSource } from './TableDataSource';
 
 @Component({
   selector: 'app-table',
@@ -19,24 +20,38 @@ export class TableComponent implements OnChanges {
     { code: 'email', name: 'e-mail' },
     { code: 'phone', name: 'Телефон' },
   ];
-  dataSource: any;
+  dataSource = new TableDataSource(this.users);
+
   selection = new SelectionModel<any>(true, []);
 
-  form: FormGroup;
   currentElement: any;
   selectedRow: any;
 
-  constructor(public dialog: MatDialog) {
-    this.form = new FormGroup({});
+  constructor(public dialog: MatDialog) {}
+
+  addClient() {
+    let dialogData: DialogData = {
+      title: 'Новый клиент',
+      checkSaveButton: null,
+      onSaveClick: (data: any) => {
+        this.users.push(data);
+        this.dataSource.setData(this.users);
+      },
+      onCancelClick: () => {},
+    };
+
+    this.dialog.open(DialogComponent, {
+      data: dialogData,
+    });
   }
 
   ngOnChanges() {
-    this.dataSource = new MatTableDataSource<any>(this.users);
+    this.dataSource.setData(this.users);
   }
 
   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numSelected = this.selection?.selected?.length;
+    const numRows = this.users.length;
     return numSelected === numRows;
   }
 
@@ -46,7 +61,7 @@ export class TableComponent implements OnChanges {
       return;
     }
 
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.users);
   }
 
   checkboxLabel(row?: any): string {
