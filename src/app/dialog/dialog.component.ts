@@ -28,6 +28,10 @@ export class DialogComponent {
         Validators.pattern('[0-9]{11}'),
       ]),
     });
+
+    if (this.data.clientData) {
+      this.formGroup.setValue(this.data.clientData);
+    }
   }
 
   onCancelClick(): void {

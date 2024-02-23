@@ -14,6 +14,8 @@ import { AppHeaderComponent } from './app-header/app-header.component';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogComponent } from './dialog/dialog.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { DialogComponent } from './dialog/dialog.component';
     TableComponent,
     AppHeaderComponent,
     DialogComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,6 +35,7 @@ import { DialogComponent } from './dialog/dialog.component';
     MatIconModule,
     MatInputModule,
     ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
