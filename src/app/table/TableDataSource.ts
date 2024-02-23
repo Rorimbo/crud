@@ -1,9 +1,9 @@
 import { DataSource } from '@angular/cdk/collections';
 import { ReplaySubject, Observable } from 'rxjs';
+import { User } from '../types/user';
 
 export class TableDataSource extends DataSource<any> {
   private _dataStream = new ReplaySubject<any[]>();
-  data: any;
 
   constructor(initialData: any[]) {
     super();
@@ -16,7 +16,7 @@ export class TableDataSource extends DataSource<any> {
 
   disconnect() {}
 
-  setData(data: any[]) {
+  setData(data: User[]): void {
     this._dataStream.next(data);
   }
 }

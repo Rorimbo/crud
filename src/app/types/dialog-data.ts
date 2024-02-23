@@ -1,7 +1,7 @@
+import { User } from './user';
+
 export interface DialogData {
   title: string;
-  checkSaveButton: any;
-  clientData?: any;
+  clientData?: User;
   onSaveClick: any;
-  onCancelClick: any;
 }

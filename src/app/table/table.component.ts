@@ -2,11 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogComponent } from '../dialog/dialog.component';
-import { DialogData } from '../dialog/dialog-data';
 import { TableDataSource } from './TableDataSource';
-import { DeleteDialogData } from '../delete-dialog/delete-dialog-data';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { ApiService } from '../api.service';
+import { User } from '../types/user';
+import { Column } from '../types/column';
+import { DialogData } from '../types/dialog-data';
+
+/*
+TODO: Фильтрация и сортировка данных.
+Добавьте возможность фильтровать/сортировать записи по имени / почте / телефону по алфавиту.
+TODO: Локальное хранилище.
+Сделайте так, чтобы данные таблицы сохранялись в локальном хранилище браузера, чтобы они не исчезали при перезагрузке страницы.
+*/
 
 @Component({
   selector: 'app-table',
@@ -14,24 +22,24 @@ import { ApiService } from '../api.service';
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
-  users: any[] = [];
+  users: User[] = [];
   displayedColumns: string[] = ['select', 'name', 'surname', 'email', 'phone'];
 
-  columns: any[] = [
+  columns: Column[] = [
     { code: 'name', name: 'Имя' },
     { code: 'surname', name: 'Фамилия' },
-    { code: 'email', name: 'e-mail' },
+    { code: 'email', name: 'E-mail' },
     { code: 'phone', name: 'Телефон' },
   ];
   dataSource = new TableDataSource(this.users);
 
-  selection = new SelectionModel<any>(true, []);
+  selection = new SelectionModel<User>(true, []);
 
   constructor(public dialog: MatDialog, private api: ApiService) {}
 
   ngOnInit() {
     this.api.getUsers().subscribe({
-      next: (users: any) => {
+      next: (users) => {
         this.users = users.users;
         this.dataSource.setData(this.users);
       },
@@ -39,15 +47,13 @@ export class TableComponent implements OnInit {
     });
   }
 
-  addClient() {
+  addClient(): void {
     let dialogData: DialogData = {
       title: 'Новый клиент',
-      checkSaveButton: null,
-      onSaveClick: (data: any) => {
+      onSaveClick: (data: User) => {
         this.users.push(data);
         this.dataSource.setData(this.users);
       },
-      onCancelClick: () => {},
     };
 
     this.dialog.open(DialogComponent, {
@@ -58,16 +64,14 @@ export class TableComponent implements OnInit {
     });
   }
 
-  editClient(rowIndex: any) {
+  editClient(rowIndex: number): void {
     let dialogData: DialogData = {
       title: 'Редактирование',
-      checkSaveButton: null,
       clientData: this.users[rowIndex],
-      onSaveClick: (data: any) => {
+      onSaveClick: (data: User) => {
         this.users[rowIndex] = data;
         this.dataSource.setData(this.users);
       },
-      onCancelClick: () => {},
     };
 
     this.dialog.open(DialogComponent, {
@@ -78,9 +82,10 @@ export class TableComponent implements OnInit {
     });
   }
 
-  deleteClient() {
-    let dialogData: DeleteDialogData = {
-      rowCount: this.selection?.selected?.length,
+  deleteClient(): void {
+    let title = `Удалить выбранные строки (${this.selection?.selected?.length})?`;
+    let dialogData: DialogData = {
+      title: title,
       onSaveClick: () => {
         this.selection?.selected?.forEach((el) => {
           let index = this.users.indexOf(el);
@@ -93,28 +98,27 @@ export class TableComponent implements OnInit {
 
     this.dialog.open(DeleteDialogComponent, {
       width: '448px',
-      height: '593px',
+      height: '300px',
       panelClass: 'dialog-cont',
       data: dialogData,
     });
   }
 
-  checkDeleting() {
+  checkDeleting(): boolean {
     return this.selection.selected.length == 0;
   }
 
-  isAllSelected() {
+  isAllSelected(): boolean {
     const numSelected = this.selection?.selected?.length;
     const numRows = this.users.length;
     return numSelected === numRows;
   }
 
-  toggleAllRows() {
+  toggleAllRows(): void {
     if (this.isAllSelected()) {
       this.selection.clear();
       return;
     }
-
     this.selection.select(...this.users);
   }
 

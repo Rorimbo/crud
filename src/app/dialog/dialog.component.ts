@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DialogData } from './dialog-data';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { russianPhoneNumberValidator } from './russian-phone-number.validator';
+import { DialogData } from '../types/dialog-data';
 
 @Component({
   selector: 'app-dialog',
@@ -25,7 +26,7 @@ export class DialogComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       phone: new FormControl('', [
         Validators.required,
-        Validators.pattern('[0-9]{11}'),
+        russianPhoneNumberValidator,
       ]),
     });
 
@@ -35,17 +36,13 @@ export class DialogComponent {
   }
 
   onCancelClick(): void {
-    if (typeof this.data.onCancelClick == 'function') {
-      this.data.onCancelClick();
-    }
     this.dialogRef.close();
   }
 
-  onSaveClick() {
+  onSaveClick(): void {
     if (typeof this.data.onSaveClick == 'function') {
       this.data.onSaveClick(this.formGroup.value);
     }
     this.dialogRef.close();
-    return;
   }
 }

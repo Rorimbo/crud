@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from './types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +9,9 @@ import { Injectable } from '@angular/core';
 export class ApiService {
   constructor(private http: HttpClient) {}
 
-  getUsers() {
-    return this.http.get('https://test-data.directorix.cloud/task1');
+  getUsers(): Observable<{ users: User[] }> {
+    return this.http.get<{ users: User[] }>(
+      'https://test-data.directorix.cloud/task1'
+    );
   }
 }
