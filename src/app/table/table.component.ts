@@ -1,29 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogComponent } from '../dialog/dialog.component';
-import { TableDataSource } from './TableDataSource';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { ApiService } from '../api.service';
 import { User } from '../types/user';
 import { Column } from '../types/column';
 import { DialogData } from '../types/dialog-data';
-
-/*
-TODO: Фильтрация и сортировка данных.
-Добавьте возможность фильтровать/сортировать записи по имени / почте / телефону по алфавиту.
-TODO: Локальное хранилище.
-Сделайте так, чтобы данные таблицы сохранялись в локальном хранилище браузера, чтобы они не исчезали при перезагрузке страницы.
-*/
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatSort) sort: MatSort;
   users: User[] = [];
   displayedColumns: string[] = ['select', 'name', 'surname', 'email', 'phone'];
+  dataSource = new MatTableDataSource(this.users);
+  selection = new SelectionModel<User>(true, []);
 
   columns: Column[] = [
     { code: 'name', name: 'Имя' },
@@ -31,20 +28,21 @@ export class TableComponent implements OnInit {
     { code: 'email', name: 'E-mail' },
     { code: 'phone', name: 'Телефон' },
   ];
-  dataSource = new TableDataSource(this.users);
 
-  selection = new SelectionModel<User>(true, []);
-
-  constructor(public dialog: MatDialog, private api: ApiService) {}
+  constructor(public dialog: MatDialog, private dataService: DataService) {}
 
   ngOnInit() {
-    this.api.getUsers().subscribe({
+    this.dataService.getUsers().subscribe({
       next: (users) => {
-        this.users = users.users;
-        this.dataSource.setData(this.users);
+        this.users = users;
+        this.dataSource.data = this.users;
       },
       error: (err: any) => console.log(err),
     });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   addClient(): void {
@@ -52,7 +50,8 @@ export class TableComponent implements OnInit {
       title: 'Новый клиент',
       onSaveClick: (data: User) => {
         this.users.push(data);
-        this.dataSource.setData(this.users);
+        this.dataSource.data = this.users;
+        this.dataService.setUsers(this.users);
       },
     };
 
@@ -70,7 +69,8 @@ export class TableComponent implements OnInit {
       clientData: this.users[rowIndex],
       onSaveClick: (data: User) => {
         this.users[rowIndex] = data;
-        this.dataSource.setData(this.users);
+        this.dataSource.data = this.users;
+        this.dataService.setUsers(this.users);
       },
     };
 
@@ -92,7 +92,8 @@ export class TableComponent implements OnInit {
           this.users.splice(index, 1);
         });
         this.selection.clear();
-        this.dataSource.setData(this.users);
+        this.dataSource.data = this.users;
+        this.dataService.setUsers(this.users);
       },
     };
 
@@ -106,6 +107,11 @@ export class TableComponent implements OnInit {
 
   checkDeleting(): boolean {
     return this.selection.selected.length == 0;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   isAllSelected(): boolean {

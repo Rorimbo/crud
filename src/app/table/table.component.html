@@ -13,8 +13,20 @@
     </button>
   </div>
 
+  <div>
+    <mat-form-field>
+      <mat-label>Фильтр</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Введите данные для поиска"
+        #input
+      />
+    </mat-form-field>
+  </div>
+
   <div class="table-content">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox
@@ -37,7 +49,9 @@
       </ng-container>
 
       <ng-container *ngFor="let column of columns" [matColumnDef]="column.code">
-        <th mat-header-cell *matHeaderCellDef>{{ column.name }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ column.name }}
+        </th>
         <td
           (click)="editClient(i)"
           mat-cell
@@ -53,6 +67,11 @@
         *matRowDef="let row; columns: displayedColumns"
         (click)="selection.toggle(row)"
       ></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          Нет данных, соответствующих фильтру "{{ input.value }}"
+        </td>
+      </tr>
     </table>
   </div>
 </div>

@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DialogComponent } from './dialog/dialog.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatSortModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
