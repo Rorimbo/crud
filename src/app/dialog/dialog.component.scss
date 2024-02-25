@@ -1,9 +1,11 @@
-.name {
-  width: 368px;
-  height: 56px;
+.form-field {
+  width: 100%;
+  margin-top: 20px;
 }
 
-.surname-label {
-  width: 368px;
-  height: 56px;
+mat-error {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: right;
 }

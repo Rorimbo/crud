@@ -1,21 +1,19 @@
 <div class="table">
-  <div class="tool-bar">
-    <button class="add-btn" mat-icon-button (click)="addClient()">
-      <mat-icon class="add-icon" fontIcon="add"></mat-icon>
+  <div class="toolbar">
+    <button class="toolbox-button" mat-icon-button (click)="addClient()">
+      <img class="button-icon" src="/assets/add-icon.svg" />
     </button>
     <button
-      class="delete-btn"
+      class="toolbox-button"
       mat-icon-button
       (click)="deleteClient()"
-      [disabled]="checkDeleting()"
+      [disabled]="!checkAnySelectedRows()"
     >
-      <mat-icon class="delete-icon" fontIcon="delete"></mat-icon>
+      <img class="button-icon" src="/assets/delete-icon.svg" />
     </button>
-  </div>
 
-  <div>
-    <mat-form-field>
-      <mat-label>Фильтр</mat-label>
+    <mat-form-field class="filter">
+      <mat-label>Поиск</mat-label>
       <input
         matInput
         (keyup)="applyFilter($event)"
@@ -28,16 +26,21 @@
   <div class="table-content">
     <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="select-column table-header"
+        >
           <mat-checkbox
             (change)="$event ? toggleAllRows() : null"
             [checked]="selection.hasValue() && isAllSelected()"
             [indeterminate]="selection.hasValue() && !isAllSelected()"
             [aria-label]="checkboxLabel()"
+            color="accent"
           >
           </mat-checkbox>
         </th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row" class="select-column">
           <mat-checkbox
             (click)="$event.stopPropagation()"
             (change)="$event ? selection.toggle(row) : null"
@@ -49,29 +52,36 @@
       </ng-container>
 
       <ng-container *ngFor="let column of columns" [matColumnDef]="column.code">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          [class]="column.code + '-column table-column table-header'"
+        >
           {{ column.name }}
         </th>
         <td
           (click)="editClient(i)"
           mat-cell
           *matCellDef="let element; let i = index"
+          [class]="column.code + '-column table-column table-cell'"
         >
           {{ element[column.code] }}
         </td>
+      </ng-container>
+
+      <ng-container matColumnDef="empty">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row"></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr
         mat-row
         *matRowDef="let row; columns: displayedColumns"
-        (click)="selection.toggle(row)"
+        [class.selected-row]="selection.isSelected(row) || false"
+        class="table-row"
       ></tr>
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          Нет данных, соответствующих фильтру "{{ input.value }}"
-        </td>
-      </tr>
     </table>
   </div>
 </div>

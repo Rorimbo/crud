@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -18,7 +24,14 @@ import { DataService } from '../services/data.service';
 export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   users: User[] = [];
-  displayedColumns: string[] = ['select', 'name', 'surname', 'email', 'phone'];
+  displayedColumns: string[] = [
+    'select',
+    'name',
+    'surname',
+    'email',
+    'phone',
+    'empty',
+  ];
   dataSource = new MatTableDataSource(this.users);
   selection = new SelectionModel<User>(true, []);
 
@@ -105,8 +118,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  checkDeleting(): boolean {
-    return this.selection.selected.length == 0;
+  checkAnySelectedRows(): boolean {
+    return this.selection.selected.length > 0;
   }
 
   applyFilter(event: Event) {

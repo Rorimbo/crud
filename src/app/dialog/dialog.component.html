@@ -1,7 +1,12 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
-<div mat-dialog-content>
-  <form [formGroup]="formGroup">
-    <mat-form-field class="name">
+<div class="dialog">
+  <h1 class="dialog-title">{{ data.title }}</h1>
+  <form [formGroup]="formGroup" class="dialog-content">
+    <mat-form-field
+      appearance="outline"
+      class="form-field"
+      hideRequiredMarker
+      [class.filled-field]="checkIfFieldFilled('name')"
+    >
       <mat-label class="name-label">Имя</mat-label>
       <input
         class="name-input"
@@ -9,19 +14,33 @@
         matInput
         placeholder="Имя"
         formControlName="name"
-        required
       />
+      <mat-error
+        align="end"
+        *ngIf="
+          formGroup.controls['name'].hasError('required') &&
+          formGroup.controls['name'].dirty
+        "
+      >
+        Это обязательное поле
+      </mat-error>
+      <mat-error
+        align="end"
+        *ngIf="
+          formGroup.controls['name'].hasError('minlength') &&
+          formGroup.controls['name'].dirty
+        "
+      >
+        Минимальное количество символов: 2
+      </mat-error>
     </mat-form-field>
-    <mat-error
-      *ngIf="
-        formGroup.controls['name'].hasError('required') &&
-        formGroup.controls['name'].touched
-      "
-    >
-      Минимальное количество символов: 2
-    </mat-error>
 
-    <mat-form-field class="surname">
+    <mat-form-field
+      appearance="outline"
+      class="form-field"
+      hideRequiredMarker
+      [class.filled-field]="checkIfFieldFilled('surname')"
+    >
       <mat-label class="surname-label">Фамилия</mat-label>
       <input
         class="surname-input"
@@ -29,47 +48,66 @@
         matInput
         placeholder="Фамилия"
         formControlName="surname"
-        required
       />
+      <mat-error
+        align="end"
+        *ngIf="
+          formGroup.controls['surname'].hasError('required') &&
+          formGroup.controls['surname'].dirty
+        "
+      >
+        Это обязательное поле
+      </mat-error>
+      <mat-error
+        align="end"
+        *ngIf="
+          formGroup.controls['surname'].hasError('minlength') &&
+          formGroup.controls['surname'].dirty
+        "
+      >
+        Минимальное количество символов: 2
+      </mat-error>
     </mat-form-field>
-    <mat-error
-      *ngIf="
-        formGroup.controls['surname'].hasError('required') &&
-        formGroup.controls['surname'].touched
-      "
-    >
-      Минимальное количество символов: 2
-    </mat-error>
 
-    <mat-form-field class="email">
+    <mat-form-field
+      appearance="outline"
+      class="form-field"
+      hideRequiredMarker
+      [class.filled-field]="checkIfFieldFilled('email')"
+    >
       <mat-label>E-mail</mat-label>
       <input
         type="email"
         matInput
         placeholder="E-mail"
         formControlName="email"
-      />
+      /><mat-error
+        align="end"
+        *ngIf="
+          formGroup.controls['email'].hasError('email') &&
+          !formGroup.controls['email'].hasError('required') &&
+          formGroup.controls['email'].dirty
+        "
+      >
+        Некорректный адрес
+      </mat-error>
+
+      <mat-error
+        align="end"
+        *ngIf="
+          formGroup.controls['email'].hasError('required') &&
+          formGroup.controls['email'].dirty
+        "
+      >
+        Это обязательное поле
+      </mat-error>
     </mat-form-field>
-    <mat-error
-      *ngIf="
-        formGroup.controls['email'].hasError('email') &&
-        !formGroup.controls['email'].hasError('required') &&
-        formGroup.controls['email'].touched
-      "
-    >
-      Некорректный адрес
-    </mat-error>
 
-    <mat-error
-      *ngIf="
-        formGroup.controls['email'].hasError('required') &&
-        formGroup.controls['email'].touched
-      "
+    <mat-form-field
+      appearance="outline"
+      class="form-field"
+      [class.filled-field]="checkIfFieldFilled('phone')"
     >
-      Это обязательное поле
-    </mat-error>
-
-    <mat-form-field class="phone">
       <mat-label>Телефон</mat-label>
       <input
         type="tel"
@@ -77,31 +115,33 @@
         placeholder="Телефон"
         formControlName="phone"
       />
+      <mat-error
+        align="end"
+        *ngIf="
+          formGroup.controls['phone'].value &&
+          formGroup.controls['phone'].hasError('russianPhoneNumber')
+        "
+      >
+        Некорректный номер телефона
+      </mat-error>
     </mat-form-field>
-    <mat-error
-      *ngIf="
-        !formGroup.controls['phone'].hasError('required') &&
-        formGroup.controls['phone'].hasError('russianPhoneNumber') &&
-        formGroup.controls['phone'].touched
-      "
-    >
-      Некорректный номер телефона
-    </mat-error>
-
-    <mat-error
-      *ngIf="
-        formGroup.controls['phone'].hasError('required') &&
-        formGroup.controls['phone'].touched
-      "
-    >
-      Это обязательное поле
-    </mat-error>
   </form>
-</div>
 
-<div mat-dialog-actions>
-  <button mat-button (click)="onSaveClick()" [disabled]="formGroup.invalid">
-    Сохранить
-  </button>
-  <button mat-button (click)="onCancelClick()">Отмена</button>
+  <div class="dialog-actions">
+    <button
+      mat-button
+      class="dialog-button cancel-button"
+      (click)="onCancelClick()"
+    >
+      Отмена
+    </button>
+    <button
+      mat-button
+      class="dialog-button confirm-button"
+      (click)="onSaveClick()"
+      [disabled]="formGroup.invalid"
+    >
+      Сохранить
+    </button>
+  </div>
 </div>

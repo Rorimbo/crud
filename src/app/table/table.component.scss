@@ -1,40 +1,67 @@
 .table {
-  width: 1888px;
-  margin-left: 16px;
-  margin-right: 16px;
+  background-color: #ffffff;
+  width: 100%;
+  height: max-content;
+  border-radius: 20px;
 }
 
-.tool-bar {
+.toolbar {
   height: 56px;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  &:first-child {
+    margin-left: 15px;
+  }
+  .toolbox-button {
+    width: 36px;
+    height: 36px;
+    margin-top: 10px;
+    padding: 0;
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  .filter {
+    width: 50%;
+  }
 }
 
-.add-btn {
-  width: 36px;
-  height: 36px;
-  margin-top: 10px;
-  margin-left: 15px;
-  padding: 0;
+.table-header {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: left;
+  color: #2f4c97;
 }
 
-.add-icon {
-  width: 20px;
-  height: 20px;
+.select-column {
+  width: 47px;
 }
 
-.delete-btn {
-  width: 36px;
-  height: 36px;
-  margin-top: 10px;
-  margin-left: 59px;
+.table-column {
+  width: 280px;
 }
 
-.delete-icon {
-  width: 21px;
-  height: 20px;
-  padding-top: 8px;
-  padding-left: 7.5px;
+.email-column,
+.phone-column {
+  text-align: end;
+  & .mat-sort-header-container {
+    justify-content: flex-end;
+  }
 }
 
-.table-content {
-  height: 861px;
+.selected-row {
+  background-color: #e9f0ff;
+}
+
+.table-row:hover {
+  background-color: #f7faff !important;
+}
+
+.table-cell:hover {
+  text-decoration: underline;
+  color: #8fafff;
 }

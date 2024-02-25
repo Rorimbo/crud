@@ -21,13 +21,13 @@ export class DialogComponent {
     }
 
     this.formGroup = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      surname: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', [
+      name: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      surname: new FormControl('', [
         Validators.required,
-        russianPhoneNumberValidator,
+        Validators.minLength(2),
       ]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      phone: new FormControl('', [russianPhoneNumberValidator]),
     });
 
     if (this.data.clientData) {
@@ -44,5 +44,13 @@ export class DialogComponent {
       this.data.onSaveClick(this.formGroup.value);
     }
     this.dialogRef.close();
+  }
+
+  checkIfFieldFilled(fieldCode: string): boolean {
+    return (
+      this.formGroup.controls[fieldCode].value &&
+      this.formGroup.controls[fieldCode].valid &&
+      this.formGroup.controls[fieldCode]
+    );
   }
 }
